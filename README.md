@@ -1,4 +1,4 @@
-Here is a description of the provided Python script, which you can use for your GitHub repository's README:
+
 
 ---
 
