@@ -1,26 +1,25 @@
 
 
----
+# Laser Control System
 
-# Laser Control System via HAL and Serial Communication
-
-This Python script is designed to control and monitor a laser system using Hardware Abstraction Layer (HAL) and serial communication. It sets up various pins to control the laser and read its parameters, enabling control via a connected system. The script reads and sets parameters such as laser power, control mode, and temperature sensors, and communicates with the laser hardware over a serial port.
+This project includes a Python script and a PyQt5-based GUI for controlling and monitoring a laser system using Hardware Abstraction Layer (HAL) and serial communication. The system allows for real-time control and monitoring of various laser parameters, providing a comprehensive solution for laser management.
 
 ## Features
 
 - **HAL Integration**: Uses HAL to create and manage pins for laser control and monitoring.
 - **Serial Communication**: Communicates with the laser system over a specified serial port.
-- **Laser Control**: Sets laser power, control mode, and on/off state.
-- **Parameter Monitoring**: Reads various parameters from the laser, including temperature sensors, electrical part conditions, and machine time.
+- **PyQt5 GUI**: Provides a rich graphical interface for user interaction.
+- **Real-Time Monitoring**: Displays real-time status and parameters of the laser system.
+- **Control Widgets**: Provides widgets for controlling laser parameters such as power, speed, and gas pressures.
+- **Logging**: Logs system actions and statuses for debugging and analysis.
 - **Error Handling**: Manages communication errors and retries commands as necessary.
-- **Logging**: Logs communication data to a file for debugging.
 
 ## Getting Started
 
 ### Prerequisites
 
 - Python 3.x
-- Required Python packages: `pyserial`, `hal`
+- Required Python packages: `PyQt5`, `qtpyvcp`, `pyqtgraph`, `hal`, `pyserial`
 - HAL (Hardware Abstraction Layer) setup on your system
 
 ### Installation
@@ -34,60 +33,76 @@ This Python script is designed to control and monitor a laser system using Hardw
 2. **Install Required Packages**:
    Use pip to install the necessary Python packages:
    ```sh
-   pip install pyserial hal
+   pip install PyQt5 qtpyvcp pyqtgraph hal pyserial
    ```
 
-3. **Configure Serial Port**:
+3. **Configure HAL**:
+   Ensure that the HAL component `lasercomp` is set up and configured correctly on your system.
+
+### Usage
+
+#### Running the Python Script
+
+1. **Configure Serial Port**:
    Update the script to specify the correct serial port for your laser system. Modify the `comPort` variable:
    ```python
    comPort = sys.argv[1]
    ```
 
-### Usage
-
-1. **Run the Script**:
+2. **Run the Script**:
    Execute the script by providing the serial port as an argument:
    ```sh
    python laser_control.py /dev/ttyUSB0
    ```
 
-2. **Control and Monitor the Laser**:
+3. **Control and Monitor the Laser**:
    - The script will automatically set up HAL pins and start monitoring and controlling the laser.
    - Use the connected system to interact with the HAL pins to control the laser and monitor its parameters.
+
+#### Running the PyQt5 GUI
+
+1. **Run the GUI**:
+   Execute the main script to start the GUI:
+   ```sh
+   python main.py
+   ```
+
+2. **Control and Monitor the Laser**:
+   - Use the GUI to interact with the laser system.
+   - Adjust parameters such as laser power, cut speed, gas pressures, etc.
+   - Monitor real-time statuses and ensure the system is operating within desired parameters.
 
 ### Code Overview
 
 #### Initialization
 
-- **HAL Component Setup**: Sets up HAL component and pins for laser control and monitoring.
+- **HAL Component Setup**: Sets up HAL component `lasercomp` and pins for laser control and monitoring.
 - **Serial Communication Setup**: Initializes the serial port with specified parameters.
+- **PyQt5 GUI Setup**: Initializes and sets up the PyQt5 GUI, including various widgets for control and monitoring.
 
-#### Main Loop
+#### Main Components
 
-- **Enable/Disable Laser**: Monitors the enable pin and controls the laser accordingly.
-- **Read Parameters**: Periodically reads various parameters from the laser system.
-- **Set Parameters**: Updates laser settings based on the current state of HAL pins.
+- **Python Script**: Handles serial communication and parameter management for the laser system.
+- **MyMainWindow Class**: Main window class for the VCP, extends `VCPMainWindow`.
+- **Initialization**: Sets up connections between HAL pins and the GUI.
 
-#### Functions
+#### HAL Pins
 
-- **cmd_set(ordercode, databits)**: Sends a command to set a parameter on the laser.
-- **cmd_read(ordercode)**: Sends a command to read a parameter from the laser.
-- **alarm(alarmbits)**: Updates the alarm status based on received alarm bits.
-- **get_parameters()**: Reads and updates all monitored parameters from the laser system.
+- **Input Pins**: Pins for receiving data from the laser system (e.g., `laserc_velocity_x`, `laserc_velocity_y`).
+- **Output Pins**: Pins for sending commands to the laser system (e.g., `laserc_pwm_pwmgen`, `laserc_start_set`).
+
+#### Control and Monitoring
+
+- **Real-Time Updates**: Updates the GUI with real-time data from the laser system.
+- **Command Execution**: Sends commands to the laser system based on user input from the GUI.
 
 ### Example HAL Pins
 
-- **laser_power_set**: Set the laser power (float, input).
-- **laser_control_mode_set**: Set the laser control mode (float, input).
-- **laser_onoff_set**: Set the laser on/off state (bit, input).
-- **temperature_sensor1**: Temperature sensor 1 (S32, output).
-- **temperature_sensor2**: Temperature sensor 2 (S32, output).
-- **laser_power_read**: Read the current laser power (S32, output).
-
-### Error Handling
-
-- The script includes basic error handling for serial communication issues.
-- Logs communication data to a file for debugging purposes.
+- **laserc_arc_on_bit**: Arc on/off status (bit, input).
+- **laserc_plasmac_status**: Plasma cutter status (S32, input).
+- **laserc_o2_regulator_pwm**: O2 regulator PWM (float, output).
+- **laserc_n2_switch_bit**: N2 switch status (bit, output).
+- **laserc_cut_speed**: Cut speed (float, output).
 
 ### Author
 
